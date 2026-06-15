@@ -1,0 +1,77 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+const lastUpdated = '2026-06-15';
+---
+
+<BaseLayout
+  title="Privacy"
+  description="How Verified Software Bases handles your data. Short, honest, no tracking we can avoid."
+>
+  <section class="container-page pt-14 pb-8 md:pt-20">
+    <p class="kicker">Privacy</p>
+    <h1 class="mt-3 text-4xl font-semibold tracking-tight text-fg sm:text-5xl text-balance">
+      What we collect, and what we don't.
+    </h1>
+    <p class="mt-3 font-mono text-xs text-faint">Last updated {lastUpdated}</p>
+  </section>
+
+  <section class="container-page pb-24 max-w-3xl">
+    <div class="space-y-8 text-[16px] text-muted leading-relaxed text-pretty">
+      <div>
+        <h2 class="text-xl font-semibold text-fg">Plain language summary</h2>
+        <p class="mt-3">
+          When you preview a Base, we don't track you beyond aggregate, cookieless
+          page counts (Cloudflare Web Analytics). When you submit a Base or buy
+          one, we store the data you give us so we can fulfil the order. We don't
+          sell your data, and we don't run third-party ad pixels.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold text-fg">What we collect</h2>
+        <ul class="mt-3 list-disc pl-5 space-y-2 marker:text-accent">
+          <li><span class="text-fg">Aggregate analytics</span> — page URL, country, device class, referer. No cookies. No IP retention. Provided by Cloudflare Web Analytics.</li>
+          <li><span class="text-fg">Creator submissions</span> — the fields you fill on <a class="link text-accent" href="/submit">/submit</a>. Stored to review and reply.</li>
+          <li><span class="text-fg">Buyer intent + orders</span> — slug, tier, email, and any note you send. Stored to fulfil the purchase and email confirmations.</li>
+          <li><span class="text-fg">Payments</span> — handled by Dodo Payments. We never see your card number; we receive a payment-success webhook with the amount, currency, and the order metadata we set.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold text-fg">Where it lives</h2>
+        <p class="mt-3">
+          Cloudflare D1 (a managed SQLite at the edge), in our Cloudflare account.
+          Email confirmations go via Resend. Payments are processed by Dodo
+          Payments. We don't use third-party analytics, ad networks, or tracking
+          pixels.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold text-fg">Cookies</h2>
+        <p class="mt-3">
+          The marketing site sets no cookies of its own. Cloudflare may set a
+          short-lived security cookie to mitigate abuse. Dodo's hosted checkout
+          may set its own; see Dodo's privacy policy.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold text-fg">Your rights</h2>
+        <p class="mt-3">
+          Email <a class="link text-accent" href="mailto:sarthakagrawal927@gmail.com">sarthakagrawal927@gmail.com</a>
+          to access, correct, or delete data we hold about you. We reply within 7 days.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold text-fg">Changes</h2>
+        <p class="mt-3">
+          When this page materially changes, we update the date at the top.
+          Material changes around what we collect or who we share with will be
+          mentioned in a release note.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

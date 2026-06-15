@@ -1,0 +1,314 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import BaseCard from '@/components/astro/BaseCard.astro';
+import BaseAnatomy from '@/components/astro/BaseAnatomy.astro';
+import CategoryIcon from '@/components/astro/CategoryIcon.astro';
+import EmptyStateArt from '@/components/astro/EmptyStateArt.astro';
+import { featuredBases, CATEGORY_META, BASES } from '@/data/bases';
+
+const featured = featuredBases();
+const cats = Object.entries(CATEGORY_META) as Array<[keyof typeof CATEGORY_META, typeof CATEGORY_META[keyof typeof CATEGORY_META]]>;
+const counts = Object.fromEntries(
+  cats.map(([k]) => [k, BASES.filter(b => b.category === k).length])
+) as Record<keyof typeof CATEGORY_META, number>;
+---
+
+<BaseLayout title="Verified Software Bases">
+  <!-- ────────────────────────── HERO ───────────────────────── -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 grid-bg opacity-50" aria-hidden="true"></div>
+    <div class="relative container-page pt-16 pb-20 md:pt-28 md:pb-32">
+      <div class="max-w-3xl">
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-2 reveal">
+          <span class="verified-stamp">
+            <span aria-hidden="true">✓</span> Verified
+          </span>
+          <span class="kicker hidden sm:inline-block">Built and sold by Sarthak</span>
+          <span class="kicker sm:hidden">By Sarthak</span>
+        </div>
+
+        <h1 class="reveal mt-6 text-[1.78rem] font-semibold leading-[1.06] tracking-[-0.03em] text-fg text-balance sm:mt-7 sm:text-5xl md:text-[3.5rem]">
+          Skip the blank prompt.
+          <span class="block headline-shimmer">Start from verified software.</span>
+        </h1>
+
+        <p class="reveal mt-6 max-w-2xl text-base sm:text-lg text-muted text-pretty leading-relaxed">
+          A small, growing catalogue of working software <em class="not-italic text-fg">Bases</em> —
+          each one shipped, scoped, and supported by me.
+          Preview them, use them, buy the source, remix them with AI, or get help launching them.
+        </p>
+
+        <div class="reveal mt-9 flex flex-wrap items-center gap-3">
+          <a href="/bases" class="btn btn-primary">
+            <span>Browse Bases</span> <span class="arrow" aria-hidden="true">→</span>
+          </a>
+          <a href="/trust" class="btn btn-ghost">How I verify</a>
+          <a href="/about" class="btn btn-naked text-sm btn-arrow">Why this exists</a>
+        </div>
+
+        <!-- Honesty preamble — frames the value, not a sales pitch. -->
+        <p class="reveal mt-10 max-w-xl text-sm text-faint leading-relaxed">
+          You can probably ask AI to build something similar.
+          This is for when you want the version I already got working —
+          with the source code, the tradeoffs, and a path to launch.
+        </p>
+      </div>
+
+      <!-- Marquee strip: live trust signals -->
+      <div class="reveal mt-12 grid grid-cols-1 gap-y-3 border-t border-line pt-6 xs:grid-cols-2 sm:flex sm:flex-wrap sm:items-baseline sm:gap-x-6">
+        {[
+          { k: 'Live',     v: BASES.length === 0
+                                ? 'first Base shipping soon'
+                                : `${BASES.length} Base${BASES.length === 1 ? '' : 's'} shipped` },
+          { k: 'Verified', v: 'I run + maintain each one' },
+          { k: 'Ownable',  v: 'source code included' },
+          { k: 'Honest',   v: 'alternatives shown' },
+        ].map((stat) => (
+          <div class="flex items-baseline gap-2 sm:pr-6">
+            <span class="kicker-muted">{stat.k}</span>
+            <span class="text-sm text-muted leading-tight">{stat.v}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────── ANATOMY OF A BASE ──────────────────── -->
+  <section class="container-page pt-12 pb-16 md:pt-16 md:pb-24">
+    <div class="grid items-center gap-10 md:grid-cols-[1fr,1.1fr] md:gap-14">
+      <div data-reveal>
+        <p class="kicker">Anatomy</p>
+        <h2 class="mt-3 text-3xl font-semibold tracking-tight text-fg sm:text-4xl text-balance">
+          What's inside every Base.
+        </h2>
+        <p class="mt-4 max-w-md text-[15px] text-muted leading-relaxed text-pretty">
+          A working preview. The source code. A scoped remix path. Optional launch help.
+          Underneath it all: honest alternatives, known limitations, and the bits AI
+          usually gets wrong — so you can decide whether to buy or prompt your own.
+        </p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          {[
+            'Live preview',
+            'Source + license',
+            'Honest alternatives',
+            'Remix paths',
+            'Launch help',
+            'Re-verified dates',
+          ].map((chip) => (
+            <span class="chip">{chip}</span>
+          ))}
+        </div>
+      </div>
+      <div data-reveal style="--reveal-delay: 80ms;">
+        <BaseAnatomy />
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────── HOW IT WORKS ───────────────────── -->
+  <section class="container-page py-20 md:py-24">
+    <header class="max-w-2xl" data-reveal>
+      <p class="kicker">How it works</p>
+      <h2 class="mt-3 text-3xl font-semibold tracking-tight text-fg sm:text-4xl text-balance">
+        Four steps from preview to launch.
+      </h2>
+    </header>
+
+    <ol class="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      {[
+        { n: '01', t: 'Preview', d: 'Open a working live demo, demo video, or screenshots. Read the honest limitations and alternatives.' },
+        { n: '02', t: 'Use or own', d: 'Buy a usable build, or buy the source code with a clear setup guide.' },
+        { n: '03', t: 'Remix', d: 'Order a scoped customisation — branding, fields, payment provider, niche fit.' },
+        { n: '04', t: 'Launch', d: 'Deploy into your own accounts, or get optional managed hosting on standardised Bases.' },
+      ].map((step, i) => (
+        <li class="panel panel-hover relative flex h-full flex-col gap-2 p-5" data-reveal style={`--reveal-delay: ${i * 70}ms;`}>
+          <div class="font-mono text-xs tracking-[0.16em] text-accent">{step.n}</div>
+          <h3 class="text-lg font-semibold text-fg">{step.t}</h3>
+          <p class="text-sm text-muted leading-relaxed text-pretty">{step.d}</p>
+          {i < 3 && (
+            <div class="pointer-events-none absolute right-3 top-5 hidden text-faint lg:block" aria-hidden="true">
+              →
+            </div>
+          )}
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- ───────────────────── WHY NOT PROMPT IT ────────────────── -->
+  <section class="container-page py-16 md:py-20" data-reveal>
+    <div class="panel-2 grid gap-6 p-7 md:grid-cols-[1fr,1.4fr] md:gap-12 md:p-10">
+      <div>
+        <p class="kicker">An honest question</p>
+        <h2 class="mt-3 text-2xl font-semibold text-fg sm:text-3xl text-balance">
+          Why not just prompt it yourself?
+        </h2>
+      </div>
+      <div class="space-y-4 text-[15px] text-muted text-pretty leading-relaxed">
+        <p>
+          You can. For many generic ideas, you should — that's progress, not a threat.
+        </p>
+        <p>
+          Bases are for when you want a verified first version, known limitations,
+          source ownership, and a path to launch without managing the messy first pass yourself.
+        </p>
+        <p class="text-fg">
+          Every listing tells you what AI usually gets wrong, so you can decide.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────── FEATURED BASES ──────────────────── -->
+  <section class="container-page py-16 md:py-20">
+    <header class="flex items-end justify-between gap-6">
+      <div>
+        <p class="kicker">{featured.length > 0 ? 'Featured' : 'Coming soon'}</p>
+        <h2 class="mt-3 text-3xl font-semibold tracking-tight text-fg sm:text-4xl text-balance">
+          {featured.length > 0
+            ? 'Working software, ready to remix.'
+            : 'The first Base is in the oven.'}
+        </h2>
+      </div>
+      {featured.length > 0 && (
+        <a href="/bases" class="hidden text-sm text-muted hover:text-fg sm:inline-flex link">
+          View all {BASES.length} →
+        </a>
+      )}
+    </header>
+
+    {featured.length > 0 ? (
+      <>
+        <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {featured.map((b) => <BaseCard base={b} />)}
+        </div>
+        <div class="mt-8 sm:hidden">
+          <a href="/bases" class="btn btn-ghost w-full">View all {BASES.length} Bases →</a>
+        </div>
+      </>
+    ) : (
+      <div class="mt-8 panel relative overflow-hidden p-8 md:p-12">
+        <div class="grid items-center gap-10 md:grid-cols-[1.2fr,1fr]">
+          <div data-reveal>
+            <p class="text-[15px] text-muted text-pretty leading-relaxed max-w-xl">
+              I'm building the first Base right now — a small, scoped piece of software
+              I'd be proud to put my name on. When it's verified end-to-end, it ships
+              here with a live preview, the source code, and the honest tradeoffs.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-3">
+              <a href="/collab" class="btn btn-primary">
+                <span>Tell me what to build</span> <span class="arrow" aria-hidden="true">→</span>
+              </a>
+              <a href="/trust" class="btn btn-ghost">How I verify</a>
+            </div>
+            <p class="mt-5 text-xs text-faint font-mono uppercase tracking-[0.18em]">
+              Built, not curated. Honest, not infinite.
+            </p>
+          </div>
+          <div data-reveal style="--reveal-delay: 100ms;">
+            <EmptyStateArt />
+          </div>
+        </div>
+      </div>
+    )}
+  </section>
+
+  {BASES.length > 0 && (
+    <!-- ─────────────────────── CATEGORIES ─────────────────────── -->
+    <section class="container-page py-16 md:py-20">
+      <header>
+        <p class="kicker">Categories</p>
+        <h2 class="mt-3 text-3xl font-semibold tracking-tight text-fg sm:text-4xl">Browse by shape.</h2>
+      </header>
+
+      <div class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        {cats.map(([key, meta], i) => (
+          <a
+            href={`/bases?cat=${key}`}
+            class="panel panel-hover group flex flex-col gap-3 p-5"
+            data-reveal
+            style={`--reveal-delay: ${i * 60}ms;`}
+          >
+            <div class="flex items-start justify-between gap-2">
+              <span class="text-accent">
+                <CategoryIcon category={key} size={28} />
+              </span>
+              <span class="font-mono text-xs text-faint">{counts[key]}</span>
+            </div>
+            <h3 class="text-base font-semibold text-fg">{meta.label}</h3>
+            <p class="text-xs text-muted leading-relaxed text-pretty">{meta.blurb}</p>
+            <span class="mt-2 inline-flex items-center gap-1 text-xs text-accent opacity-0 transition-opacity group-hover:opacity-100">
+              Open <span aria-hidden="true">→</span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- ───────────────────── COLLAB ────────────────────────── -->
+  <section class="container-page py-16 md:py-20" data-reveal>
+    <div class="panel relative overflow-hidden p-8 md:p-12">
+      <div class="absolute inset-0 grid-bg opacity-40" aria-hidden="true"></div>
+      <div class="relative grid gap-8 md:grid-cols-[1.3fr,1fr]">
+        <div>
+          <p class="kicker">Collab</p>
+          <h2 class="mt-3 text-3xl font-semibold tracking-tight text-fg sm:text-4xl text-balance">
+            Built something good with AI?
+          </h2>
+          <p class="mt-4 max-w-xl text-[15px] text-muted leading-relaxed text-pretty">
+            Right now every Base here is mine. If you've shipped something small and useful
+            and you want a second pair of eyes — or you want it listed alongside mine —
+            send it over. No promises, real reply within a week.
+          </p>
+          <div class="mt-7 flex flex-wrap gap-3">
+            <a href="/collab" class="btn btn-primary">Tell me about it →</a>
+            <a href="/trust" class="btn btn-ghost">How I verify</a>
+          </div>
+        </div>
+
+        <ul class="grid grid-cols-2 gap-3 self-center">
+          {[
+            { k: 'No promises', v: 'Inbound, not an open marketplace' },
+            { k: 'Honest',      v: 'Notes back even on a no' },
+            { k: 'Path to list',v: 'If it fits, 70–80% to you' },
+            { k: 'Window',      v: 'Reply within 7 days' },
+          ].map((s) => (
+            <li class="panel-2 p-3.5">
+              <div class="kicker-muted">{s.k}</div>
+              <div class="mt-1.5 text-sm text-fg">{s.v}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────── TRUST ──────────────────────── -->
+  <section class="container-page py-16 md:py-24">
+    <header class="max-w-2xl" data-reveal>
+      <p class="kicker">How I verify</p>
+      <h2 class="mt-3 text-3xl font-semibold tracking-tight text-fg sm:text-4xl text-balance">
+        This isn't a dump of AI-generated repos.
+      </h2>
+    </header>
+
+    <div class="mt-10 grid gap-3 md:grid-cols-3">
+      {[
+        { t: 'I built it', d: 'I shipped every Base here, hit the limits myself, and won\'t list one until I would happily run it for someone else.' },
+        { t: 'Specific',  d: 'No generic "todo app" or "CRM" — every Base has a niche, a clear scope, and a workflow I tested end-to-end.' },
+        { t: 'Honest',    d: 'Every listing shows free tools, paid SaaS alternatives, and whether you should just prompt it yourself.' },
+      ].map((c, i) => (
+        <div class="panel panel-hover p-6" data-reveal style={`--reveal-delay: ${i * 70}ms;`}>
+          <h3 class="text-base font-semibold text-fg">{c.t}</h3>
+          <p class="mt-2 text-sm text-muted leading-relaxed text-pretty">{c.d}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-10 flex flex-wrap items-center gap-3">
+      <a href="/trust" class="btn btn-ghost">Read the full standard →</a>
+      <span class="text-xs text-faint font-mono">No clones · No copied UI · No broken demos · No AI slop</span>
+    </div>
+  </section>
+</BaseLayout>

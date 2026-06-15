@@ -1,0 +1,59 @@
+---
+import type { Tier } from '@/data/bases';
+
+interface Props { tier: Tier; primary?: boolean; }
+const { tier, primary = false } = Astro.props;
+
+const ACCENT_LABELS: Record<Tier['key'], { hint: string }> = {
+  preview: { hint: 'Build trust first' },
+  use:     { hint: 'Best for non-technical buyers' },
+  own:     { hint: 'Source code + commercial license' },
+  remix:   { hint: 'AI-assisted, scoped customisation' },
+  launch:  { hint: 'Deploy into your own accounts' },
+  hosting: { hint: 'We host. Hosted-eligible Bases only.' },
+};
+---
+
+<div
+  class:list={[
+    'panel relative flex h-full flex-col gap-3 p-5',
+    primary && 'glow-accent',
+  ]}
+>
+  <div class="flex items-baseline justify-between gap-3">
+    <div>
+      <div class="kicker">{tier.label}</div>
+      <div class="mt-2 text-2xl font-semibold text-fg">{tier.price}</div>
+    </div>
+    {primary && (
+      <span class="badge badge-accent">Popular</span>
+    )}
+  </div>
+
+  <p class="text-xs text-faint">{ACCENT_LABELS[tier.key].hint}</p>
+
+  <ul class="mt-2 space-y-2 text-sm text-muted">
+    {tier.includes.map((line) => (
+      <li class="flex items-start gap-2">
+        <span class="mt-1.5 inline-block h-1 w-2.5 shrink-0 rounded-sm bg-accent"></span>
+        <span class="text-pretty">{line}</span>
+      </li>
+    ))}
+  </ul>
+
+  {tier.note && (
+    <p class="text-xs text-faint italic">{tier.note}</p>
+  )}
+
+  <button
+    class:list={[
+      'btn mt-3 w-full',
+      primary ? 'btn-primary' : 'btn-ghost',
+    ]}
+    data-tier={tier.key}
+    type="button"
+    aria-label={`Get the ${tier.label} tier — ${tier.price}`}
+  >
+    {tier.key === 'preview' ? 'Open preview ↗' : 'Continue →'}
+  </button>
+</div>

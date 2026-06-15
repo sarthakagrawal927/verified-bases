@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "verified-bases-web",
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2026-05-01",
+
+  // Wire `/api/*` (handled by web/functions/api/[[path]].ts) to the
+  // backend Worker. Service-bind by name — the Worker must exist in the
+  // same Cloudflare account.
+  "services": [
+    { "binding": "API", "service": "verified-bases-api" }
+  ]
+}

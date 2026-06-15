@@ -1,0 +1,58 @@
+---
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path === href || path.startsWith(href + '/');
+
+const links = [
+  { href: '/bases',  label: 'Browse' },
+  { href: '/trust',  label: 'Trust' },
+  { href: '/collab', label: 'Collab' },
+];
+---
+
+<header class="fixed inset-x-0 top-0 z-50 border-b border-line backdrop-blur-md bg-[color-mix(in_srgb,var(--color-base)_82%,transparent)]">
+  <nav class="container-page flex h-16 items-center justify-between">
+    <a href="/" class="flex items-center gap-2.5 group" aria-label="Verified Software Bases home">
+      <span
+        class="grid h-8 w-8 place-items-center rounded-md border border-accent-dim text-accent font-mono text-sm transition-colors group-hover:bg-[color-mix(in_srgb,var(--color-accent)_12%,transparent)]"
+        style="background: color-mix(in srgb, var(--color-accent) 6%, var(--color-panel));"
+      >
+        ◆
+      </span>
+      <span class="font-mono text-[0.82rem] tracking-[0.06em] text-fg">
+        verified<span class="text-muted">/</span>bases
+      </span>
+    </a>
+
+    <div class="flex items-center gap-1 sm:gap-2">
+      {links.map((link) => (
+        <a
+          href={link.href}
+          class:list={[
+            'btn-naked text-sm transition-colors',
+            isActive(link.href) ? 'text-fg' : 'text-muted hover:text-fg',
+          ]}
+          aria-current={isActive(link.href) ? 'page' : undefined}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+  </nav>
+</header>
+
+<style>
+  /* Tailwind v4 — ensure tokens are exposed as Tailwind utility colors. */
+  :global(.text-fg)      { color: var(--color-fg); }
+  :global(.text-muted)   { color: var(--color-muted); }
+  :global(.text-faint)   { color: var(--color-faint); }
+  :global(.text-accent)  { color: var(--color-accent); }
+  :global(.text-verified){ color: var(--color-verified); }
+  :global(.border-line)        { border-color: var(--color-line); }
+  :global(.border-line-strong) { border-color: var(--color-line-strong); }
+  :global(.border-accent-dim)  { border-color: var(--color-accent-dim); }
+  :global(.border-accent)      { border-color: var(--color-accent); }
+  :global(.bg-base)    { background-color: var(--color-base); }
+  :global(.bg-panel)   { background-color: var(--color-panel); }
+  :global(.bg-panel-2) { background-color: var(--color-panel-2); }
+</style>

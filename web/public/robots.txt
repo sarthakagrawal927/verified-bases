@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bases.sarthakagrawal.dev/sitemap-index.xml

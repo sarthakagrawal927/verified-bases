@@ -1,0 +1,80 @@
+---
+import '@fontsource-variable/geist';
+import '@fontsource-variable/geist-mono';
+import '@/styles/global.css';
+
+import { ClientRouter } from 'astro:transitions';
+import Head from '@/components/astro/Head.astro';
+import Nav from '@/components/astro/Nav.astro';
+import Footer from '@/components/astro/Footer.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  hideFooter?: boolean;
+}
+
+const { title, description, image, type, hideFooter = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <Head title={title} description={description} image={image} type={type} />
+    <ClientRouter />
+  </head>
+  <body class="min-h-screen">
+    <a
+      href="#main"
+      class="sr-only z-[200] rounded-md border border-line-strong bg-panel px-4 py-2 text-sm text-fg focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+    >
+      Skip to content
+    </a>
+
+    <!-- Ambient aurora — slow-drifting amber halo that bleeds through panels.
+         Fixed, pointer-events:none, very low opacity. Heavy lifting for "premium feel". -->
+    <div class="aurora" aria-hidden="true">
+      <span class="aurora-orb aurora-a"></span>
+      <span class="aurora-orb aurora-b"></span>
+      <span class="aurora-noise"></span>
+    </div>
+
+    <Nav />
+
+    <main id="main" class="pt-16">
+      <slot />
+    </main>
+
+    {!hideFooter && <Footer />}
+
+    <!-- Scroll-reveal — any element with [data-reveal] fades + rises into view. -->
+    <script is:inline>
+      (() => {
+        const apply = () => {
+          const els = document.querySelectorAll('[data-reveal]:not(.is-revealed)');
+          if (!els.length) return;
+          if (!('IntersectionObserver' in window)) {
+            els.forEach((el) => el.classList.add('is-revealed'));
+            return;
+          }
+          const io = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('is-revealed');
+                  io.unobserve(entry.target);
+                }
+              });
+            },
+            { rootMargin: '0px 0px -8% 0px', threshold: 0.12 }
+          );
+          els.forEach((el) => io.observe(el));
+        };
+        apply();
+        document.addEventListener('astro:page-load', apply);
+      })();
+    </script>
+  </body>
+</html>

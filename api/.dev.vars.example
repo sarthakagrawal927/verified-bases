@@ -1,0 +1,38 @@
+# Copy to api/.dev.vars and fill. wrangler dev loads it automatically.
+#
+# Do NOT commit api/.dev.vars — it's in api/.gitignore.
+
+# Dodo Payments (test mode).
+DODO_API_KEY="sk_test_REPLACE_ME"
+DODO_WEBHOOK_SECRET="whsec_REPLACE_ME"
+DODO_ENV="test"
+
+# Resend transactional email.
+RESEND_API_KEY="re_REPLACE_ME"
+RESEND_FROM="Verified Bases <hello@bases.sarthakagrawal.dev>"
+
+# Admin inbox.
+ADMIN_INBOX_EMAIL="sarthakagrawal927@gmail.com"
+
+# Site origin used for Dodo return / cancel URLs (override per env).
+PUBLIC_SITE_ORIGIN="http://localhost:4321"
+
+# Cloudflare Turnstile (anti-spam on the /collab form).
+# Test secret "1x0000000000000000000000000000000AA" always passes — use locally.
+TURNSTILE_SECRET="1x0000000000000000000000000000000AA"
+
+# HMAC key for signing /api/download URLs. Generate any high-entropy string
+# (e.g. `openssl rand -hex 32`). Rotating this invalidates all outstanding
+# download links — that's fine for Phase 1 (links are 7-day TTL anyway).
+DELIVERY_SECRET="dev_change_me_to_random_32_bytes"
+
+# Per-Base product IDs — one per (slug, tier) you want to actually charge for.
+# Example:
+# DODO_PRODUCT_csv_cleaner_mac_own="prod_test_REPLACE_ME"
+# DODO_PRODUCT_csv_cleaner_mac_use="prod_test_REPLACE_ME"
+
+# Per-Base R2 delivery keys — set ONCE per tier after `wrangler r2 object put`.
+# When unset, the buyer email tells them you'll deliver manually within 24h.
+# Example:
+# DODO_DELIVERY_csv_cleaner_mac_use="csv-cleaner-mac/use/v1.dmg"
+# DODO_DELIVERY_csv_cleaner_mac_own="csv-cleaner-mac/own/v1.zip"

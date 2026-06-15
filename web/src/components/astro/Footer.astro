@@ -1,0 +1,70 @@
+---
+const year = 2026;
+---
+
+<footer class="mt-32 border-t border-line">
+  <div class="container-page py-12 md:py-16">
+    <div class="grid gap-10 md:grid-cols-[1.4fr,1fr,1fr,1fr]">
+      <div>
+        <div class="flex items-center gap-2.5">
+          <span
+            class="grid h-8 w-8 place-items-center rounded-md border border-accent-dim text-accent font-mono text-sm"
+            style="background: color-mix(in srgb, var(--color-accent) 6%, var(--color-panel));"
+          >◆</span>
+          <span class="font-mono text-[0.82rem] tracking-[0.06em] text-fg">
+            verified<span class="text-muted">/</span>bases
+          </span>
+        </div>
+        <p class="mt-4 max-w-sm text-sm text-muted text-pretty">
+          Verified software Bases — built and sold by Sarthak.
+          Preview them, use them, buy the source, remix them with AI, or get help launching them.
+        </p>
+        <p class="mt-4 kicker-muted">Built, not curated. Honest, not infinite.</p>
+      </div>
+
+      <div>
+        <p class="kicker-muted">Browse</p>
+        <ul class="mt-4 space-y-2 text-sm text-muted">
+          <li><a class="link" href="/bases">All Bases</a></li>
+          <li><a class="link" href="/bases?cat=mac-app">Mac apps</a></li>
+          <li><a class="link" href="/bases?cat=website">Websites</a></li>
+          <li><a class="link" href="/bases?cat=internal-tool">Internal tools</a></li>
+          <li><a class="link" href="/bases?cat=creator-tool">Creator tools</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="kicker-muted">More</p>
+        <ul class="mt-4 space-y-2 text-sm text-muted">
+          <li><a class="link" href="/trust">How I verify</a></li>
+          <li><a class="link" href="/collab">Collab</a></li>
+          <li><a class="link" href="/about">About</a></li>
+          <li><a class="link" href="/privacy">Privacy</a></li>
+          <li><a class="link" href="/terms">Terms</a></li>
+          <li><a class="link" href="/refund">Refunds</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <p class="kicker-muted">Built in the open</p>
+        <ul class="mt-4 space-y-2 text-sm text-muted">
+          <li>
+            <a class="link" href="https://github.com/sarthakagrawal927" target="_blank" rel="noopener">
+              GitHub
+            </a>
+          </li>
+          <li>
+            <a class="link" href="https://sarthakagrawal.dev" target="_blank" rel="noopener">
+              sarthakagrawal.dev
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 flex flex-col gap-2 border-t border-line pt-6 text-xs text-faint md:flex-row md:items-center md:justify-between">
+      <span>© {year} Verified Software Bases. Curated, not infinite.</span>
+      <span class="font-mono">v0.1 · fleet/verified-bases</span>
+    </div>
+  </div>
+</footer>

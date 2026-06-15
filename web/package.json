@@ -1,0 +1,36 @@
+{
+  "name": "verified-bases-web",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Verified Software Bases — curated marketplace for working software starting points.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "prebuild": "node scripts/icons.mjs",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check",
+    "icons": "node scripts/icons.mjs"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^4.2.6",
+    "@astrojs/react": "^4.3.0",
+    "@astrojs/sitemap": "^3.4.0",
+    "@fontsource-variable/geist": "^5.2.5",
+    "@fontsource-variable/geist-mono": "^5.2.6",
+    "@tailwindcss/vite": "^4.1.7",
+    "astro": "^5.8.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^4.1.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@types/react": "^19.1.4",
+    "@types/react-dom": "^19.1.5",
+    "lightningcss": "^1.32.0",
+    "typescript": "^5.8.3"
+  }
+}

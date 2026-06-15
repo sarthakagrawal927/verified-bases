@@ -1,0 +1,71 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About"
+  description="The thesis behind Verified Software Bases — and why this exists even as AI makes software cheap."
+>
+  <section class="container-page pt-14 pb-10 md:pt-20">
+    <p class="kicker">About</p>
+    <h1 class="mt-3 text-4xl font-semibold tracking-tight text-fg sm:text-5xl text-balance">
+      A bet on judgment, not tokens.
+    </h1>
+  </section>
+
+  <section class="container-page py-8 max-w-3xl">
+    <div class="space-y-6 text-[16px] text-muted leading-relaxed text-pretty">
+      <p>
+        AI will make software generation cheap, fast, and abundant. That doesn't
+        eliminate value — it moves value away from raw code generation and toward
+        things that don't get cheaper:
+      </p>
+      <ul class="grid gap-2.5 border-l border-line pl-5">
+        <li>— creator judgment</li>
+        <li>— verified outcomes</li>
+        <li>— trusted packaging</li>
+        <li>— live previews</li>
+        <li>— source ownership</li>
+        <li>— remixability</li>
+        <li>— launch support</li>
+        <li>— honest curation</li>
+      </ul>
+      <p>
+        Verified Software Bases doesn't sell "AI-generated code." That's becoming
+        a commodity, fast. It sells <span class="text-fg">verified, scoped, ownable
+        software outcomes</span> — each one previewed, reviewed, and packaged with
+        a clear path from "looks interesting" to "deployed and earning".
+      </p>
+
+      <div class="panel-2 p-6 not-prose">
+        <p class="kicker">Customer-facing thesis</p>
+        <blockquote class="mt-2 text-xl font-medium text-fg text-balance">
+          Skip the blank prompt. Start from verified software.
+        </blockquote>
+      </div>
+
+      <p>
+        You can probably ask AI to build something similar. This exists for when
+        you want the working version, the source code, the tradeoffs, and a path
+        to launch — without managing the messy first pass yourself.
+      </p>
+
+      <p class="text-fg">
+        Built, not curated. Verified, not promised. Ownable, not rented.
+      </p>
+      <p class="pt-4 border-t border-line">
+        Today every Base on this site is mine. If that changes — if someone sends in
+        work I'd be proud to list alongside my own — I'll open submissions formally.
+        For now: <a class="link text-accent" href="/collab">/collab</a> is the door.
+      </p>
+    </div>
+  </section>
+
+  <section class="container-page py-12 pb-24">
+    <div class="flex flex-wrap gap-3">
+      <a href="/bases" class="btn btn-primary">Browse Bases →</a>
+      <a href="/collab" class="btn btn-ghost">Collab</a>
+      <a href="/trust" class="btn btn-naked text-sm">How I verify →</a>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,78 @@
+---
+import type { Base } from '@/data/bases';
+import { BADGE_META, CATEGORY_META } from '@/data/bases';
+
+interface Props { base: Base; }
+const { base } = Astro.props;
+
+const previewBadge = base.badges.includes('live-preview-verified');
+const remixBadge   = base.badges.includes('remix-ready');
+const sourceBadge  = base.badges.some(b => b === 'source-build-verified' || b === 'mac-build-verified');
+
+// Show the 3 most signal-bearing badges on cards; full set on detail page.
+const cardBadges = [
+  previewBadge && 'live-preview-verified',
+  sourceBadge  && (base.badges.includes('mac-build-verified') ? 'mac-build-verified' : 'source-build-verified'),
+  remixBadge   && 'remix-ready',
+].filter(Boolean) as Array<keyof typeof BADGE_META>;
+---
+
+<a
+  href={`/bases/${base.slug}`}
+  class="panel panel-hover group flex h-full flex-col overflow-hidden"
+  data-cat={base.category}
+>
+  <!-- Thumbnail / abstract preview strip -->
+  <div class="relative h-32 overflow-hidden border-b border-line bg-panel-2">
+    <div class="absolute inset-0 grid-bg opacity-60"></div>
+    <div
+      class="absolute inset-x-0 bottom-0 h-12 hatch opacity-40"
+      aria-hidden="true"
+    ></div>
+    <div class="absolute right-3 top-3">
+      <span class="kicker-muted">{CATEGORY_META[base.category].label}</span>
+    </div>
+    <div class="absolute left-4 bottom-3 font-mono text-[0.66rem] tracking-[0.16em] uppercase text-muted">
+      Verified {new Date(base.lastVerified).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+    </div>
+  </div>
+
+  <div class="flex flex-1 flex-col gap-3 p-5">
+    <div>
+      <h3 class="text-[1.05rem] font-semibold text-fg leading-tight text-balance">
+        {base.title}
+      </h3>
+      <p class="mt-1.5 text-sm text-muted leading-snug text-pretty">
+        {base.oneLiner}
+      </p>
+    </div>
+
+    <div class="flex flex-wrap gap-1.5">
+      {cardBadges.map((b) => (
+        <span
+          class:list={[
+            'badge',
+            BADGE_META[b].tone === 'verified' && 'badge-verified',
+            BADGE_META[b].tone === 'accent'   && 'badge-accent',
+          ]}
+        >
+          {BADGE_META[b].tone === 'verified' && '✓'}
+          {BADGE_META[b].label}
+        </span>
+      ))}
+    </div>
+
+    <div class="mt-auto flex items-end justify-between border-t border-line pt-3">
+      <div>
+        <div class="font-mono text-[0.66rem] uppercase tracking-[0.16em] text-faint">From</div>
+        <div class="mt-0.5 text-fg">
+          <span class="text-lg font-semibold">${base.startingPrice}</span>
+        </div>
+      </div>
+      <div class="text-right">
+        <div class="font-mono text-[0.66rem] uppercase tracking-[0.16em] text-faint">DIY with AI</div>
+        <div class="mt-0.5 font-mono text-xs text-muted">{base.diy.selfBuildHours}</div>
+      </div>
+    </div>
+  </div>
+</a>

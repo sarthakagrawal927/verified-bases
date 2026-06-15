@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630" role="img" aria-label="Skip the blank prompt. Start from verified software.">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0a0b"/>
+      <stop offset="100%" stop-color="#0f1012"/>
+    </linearGradient>
+    <pattern id="grid" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#1f2126" stroke-width="1"/>
+    </pattern>
+    <radialGradient id="gridMask" cx="50%" cy="0%" r="80%">
+      <stop offset="0%" stop-color="white" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="white" stop-opacity="0"/>
+    </radialGradient>
+    <mask id="mask">
+      <rect width="1200" height="630" fill="url(#gridMask)"/>
+    </mask>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#grid)" mask="url(#mask)"/>
+
+  <!-- Verified stamp -->
+  <g transform="translate(80,100) rotate(-3.5)">
+    <rect x="0" y="0" width="170" height="44" rx="6" ry="6" fill="none" stroke="#f0b54a" stroke-width="2"/>
+    <text x="22" y="29" font-family="ui-monospace, 'SF Mono', monospace" font-size="17" letter-spacing="3" fill="#f0b54a">✓ VERIFIED</text>
+  </g>
+
+  <text x="80" y="118" font-family="ui-monospace, 'SF Mono', monospace" font-size="17" letter-spacing="3.5" fill="#f0b54a" transform="translate(280,2)">
+    A CURATED SOFTWARE MARKETPLACE
+  </text>
+
+  <!-- Headline -->
+  <text x="80" y="270" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif" font-weight="600" font-size="92" fill="#ececee" letter-spacing="-3">
+    Skip the blank prompt.
+  </text>
+  <text x="80" y="370" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif" font-weight="600" font-size="92" fill="#f0b54a" letter-spacing="-3">
+    Start from verified software.
+  </text>
+
+  <!-- Subhead -->
+  <text x="80" y="450" font-family="ui-sans-serif, system-ui, -apple-system, sans-serif" font-size="28" fill="#9398a2" letter-spacing="-0.3">
+    Preview. Use. Own. Remix. Launch.
+  </text>
+
+  <!-- Footer mark -->
+  <g transform="translate(80,540)">
+    <rect x="0" y="0" width="40" height="40" rx="7" fill="#0f1012" stroke="#7a5a1f" stroke-width="1"/>
+    <text x="13" y="28" font-family="ui-monospace, 'SF Mono', monospace" font-size="18" fill="#f0b54a">◆</text>
+    <text x="56" y="27" font-family="ui-monospace, 'SF Mono', monospace" font-size="20" fill="#ececee" letter-spacing="1">verified<tspan fill="#9398a2">/</tspan>bases</text>
+  </g>
+  <text x="1120" y="566" text-anchor="end" font-family="ui-monospace, 'SF Mono', monospace" font-size="16" fill="#6f7480" letter-spacing="2">
+    bases.sarthakagrawal.dev
+  </text>
+</svg>

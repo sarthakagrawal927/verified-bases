@@ -1,0 +1,103 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+const lastUpdated = '2026-06-15';
+---
+
+<BaseLayout
+  title="Terms"
+  description="The rules for using Verified Software Bases — what we promise, what we don't, and what you agree to when you buy a Base."
+>
+  <section class="container-page pt-14 pb-8 md:pt-20">
+    <p class="kicker">Terms</p>
+    <h1 class="mt-3 text-4xl font-semibold tracking-tight text-fg sm:text-5xl text-balance">
+      The rules of the marketplace.
+    </h1>
+    <p class="mt-3 font-mono text-xs text-faint">Last updated {lastUpdated}</p>
+  </section>
+
+  <section class="container-page pb-24 max-w-3xl">
+    <div class="space-y-8 text-[16px] text-muted leading-relaxed text-pretty">
+      <div>
+        <h2 class="text-xl font-semibold text-fg">1. What you're buying</h2>
+        <p class="mt-3">
+          You're buying a Base: a verified working software starting point. The
+          specific deliverable depends on the tier — Use It (compiled app or
+          access), Own It (source code), Remix It (a scoped customisation),
+          Launch It (deployment help), Managed Hosting (recurring).
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold text-fg">2. License</h2>
+        <p class="mt-3">
+          Default buyer license: <span class="text-fg">you own your purchased copy.</span>
+          You can modify, deploy, and use it commercially. You can't redistribute
+          the unchanged source as a competing listing, can't claim affiliation
+          with named alternatives, and must respect any third-party API or
+          service terms baked into the Base. Per-Base licenses on the listing
+          page may add or relax terms; the listing wins on conflict.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold text-fg">3. What we promise</h2>
+        <ul class="mt-3 list-disc pl-5 space-y-2 marker:text-accent">
+          <li>Every listed Base was reviewed and worked at the time of its <span class="text-fg">last verified</span> date shown on the listing.</li>
+          <li>The deliverable described in the tier you purchased will be sent to your email within 7 days for manual fulfillment, or immediately if the listing is marked instant.</li>
+          <li>If we can't deliver, we refund — see <a class="link text-accent" href="/refund">refund policy</a>.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold text-fg">4. What we don't promise</h2>
+        <ul class="mt-3 list-disc pl-5 space-y-2 marker:text-accent">
+          <li>That a Base will fit your specific use case beyond what its listing claims.</li>
+          <li>Unlimited support, customization, or rewrites — those are tiered (Fix Pack / Remix / Launch).</li>
+          <li>Uptime or SLAs unless you're on Managed Hosting, where its specific terms apply.</li>
+          <li>That third-party services the Base integrates with (Supabase, Stripe, Resend, …) will keep their pricing or terms.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold text-fg">5. Creator obligations</h2>
+        <p class="mt-3">
+          If you submit a Base, you confirm you have the right to license its
+          contents to buyers, that the listing copy is accurate, and that the
+          declared limitations are honest. We may remove listings that fail
+          re-verification or violate the trust standard.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold text-fg">6. Prohibited use</h2>
+        <p class="mt-3">
+          Don't use the marketplace, an API, or a Base to harass, deceive,
+          violate someone else's terms, or build something illegal in your
+          jurisdiction. We reserve the right to refuse service.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold text-fg">7. Liability</h2>
+        <p class="mt-3">
+          To the extent allowed by law, our total liability for any claim is
+          capped at the amount you paid for the relevant Base in the past 12
+          months. The marketplace is provided "as is".
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold text-fg">8. Changes</h2>
+        <p class="mt-3">
+          When these terms materially change, we update the date at the top.
+          Continued use after a material change means you accept the update.
+          If you don't, email us and we'll refund any unredeemed tier.
+        </p>
+      </div>
+
+      <p class="text-fg pt-4 border-t border-line">
+        Questions: <a class="link text-accent" href="mailto:sarthakagrawal927@gmail.com">sarthakagrawal927@gmail.com</a>.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

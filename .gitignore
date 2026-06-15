@@ -1,0 +1,24 @@
+# Build artefacts
+web/node_modules/
+web/dist/
+web/.astro/
+web/.wrangler/
+api/build/
+api/.wrangler/
+
+# Secrets — these live as Worker secrets / Pages env vars, never in repo
+.env
+.env.*
+!.env.example
+api/.dev.vars
+!api/.dev.vars.example
+
+# Local OS / tooling
+.DS_Store
+*.log
+.idea/
+.vscode/
+
+# Test outputs
+coverage/
+.nyc_output/

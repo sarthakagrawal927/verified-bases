@@ -1,0 +1,66 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+}
+
+const DEFAULTS = {
+  title: 'Verified Software Bases',
+  description:
+    'Skip the blank prompt. Start from verified software. A curated marketplace of working software Bases you can preview, use, own, remix, or launch.',
+  image: '/og.png', // generated from og.svg by `npm run prebuild`
+};
+
+const { title, description = DEFAULTS.description, image = DEFAULTS.image, type = 'website' } = Astro.props;
+
+const pageTitle =
+  title === DEFAULTS.title ? title : `${title} — Verified Software Bases`;
+
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://bases.sarthakagrawal.dev');
+const ogImage = new URL(image, Astro.site ?? 'https://bases.sarthakagrawal.dev');
+
+// Cloudflare Web Analytics token — set at build time via PUBLIC_CF_BEACON.
+// Falls back to silent no-op when unset (local dev, preview environments).
+const beaconToken = import.meta.env.PUBLIC_CF_BEACON ?? '';
+---
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="generator" content={Astro.generator} />
+<meta name="theme-color" content="#0a0a0b" />
+<meta name="color-scheme" content="dark" />
+
+<title>{pageTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+<meta property="og:type" content={type} />
+<meta property="og:url" content={canonical} />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={ogImage} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={pageTitle} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+
+{
+  beaconToken && (
+    <script
+      is:inline
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js"
+      data-cf-beacon={`{"token": "${beaconToken}"}`}
+    />
+  )
+}

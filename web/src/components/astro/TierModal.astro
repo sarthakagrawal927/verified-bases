@@ -1,0 +1,213 @@
+---
+/**
+ * Tier intent capture modal — opens when any tier card's CTA is clicked.
+ *
+ * Single instance per page; the buttons announce themselves via
+ * `data-tier="<key>"` and `data-base-slug` (read from a global on the page).
+ * The modal POSTs to `/api/checkout` and either:
+ *   - redirects to the returned `checkout_url` (Dodo hosted checkout), or
+ *   - shows a "we captured your interest" success state when checkout isn't
+ *     wired for this tier yet (BE returned 503).
+ */
+---
+
+<dialog id="tier-modal" class="modal-overlay hidden" aria-labelledby="tier-modal-title">
+  <div class="modal-panel">
+    <header class="flex items-center justify-between border-b border-line px-5 py-4">
+      <div>
+        <p class="kicker" id="tier-modal-kicker">Tier</p>
+        <h2 id="tier-modal-title" class="mt-1.5 text-lg font-semibold text-fg">
+          Continue
+        </h2>
+      </div>
+      <button
+        type="button"
+        data-tier-modal-close
+        class="btn btn-naked text-faint hover:text-fg"
+        aria-label="Close"
+      >
+        ✕
+      </button>
+    </header>
+
+    <form id="tier-modal-form" class="space-y-4 p-5" novalidate>
+      <div>
+        <label class="field-label" for="tier-modal-email">Email</label>
+        <input
+          id="tier-modal-email"
+          name="email"
+          type="email"
+          required
+          autocomplete="email"
+          class="field"
+          placeholder="you@yourdomain.com"
+        />
+      </div>
+
+      <div>
+        <label class="field-label" for="tier-modal-note">Optional note</label>
+        <textarea
+          id="tier-modal-note"
+          name="note"
+          rows="2"
+          class="field resize-y"
+          placeholder="Anything we should know? (specific niche, deadline, …)"
+        ></textarea>
+      </div>
+
+      <div
+        id="tier-modal-status"
+        class="hidden rounded-md border border-line bg-panel-2 px-3 py-2.5 text-sm"
+        role="status"
+        aria-live="polite"
+      ></div>
+
+      <button type="submit" id="tier-modal-submit" class="btn btn-primary w-full">
+        <span data-tier-modal-cta>Continue →</span>
+      </button>
+
+      <p class="text-xs text-faint text-center">
+        By continuing you agree to the
+        <a class="link text-muted" href="/terms" target="_blank">terms</a> and
+        <a class="link text-muted" href="/refund" target="_blank">refund policy</a>.
+      </p>
+    </form>
+  </div>
+</dialog>
+
+<script is:inline>
+  (() => {
+    const modal     = document.getElementById('tier-modal');
+    const form      = document.getElementById('tier-modal-form');
+    const title     = document.getElementById('tier-modal-title');
+    const kicker    = document.getElementById('tier-modal-kicker');
+    const status    = document.getElementById('tier-modal-status');
+    const cta       = document.querySelector('[data-tier-modal-cta]');
+    const submitBtn = document.getElementById('tier-modal-submit');
+    if (!modal || !form || !title || !kicker || !status || !cta || !submitBtn) return;
+
+    const baseSlug = window.__BASE_SLUG__;
+    const baseTitle = window.__BASE_TITLE__ || '';
+    const tierByKey = window.__BASE_TIERS__ || {};
+    if (!baseSlug) return;
+
+    let currentTier = null;
+    let lastFocus = null;
+
+    const setStatus = (msg, tone) => {
+      if (!msg) { status.classList.add('hidden'); status.textContent = ''; return; }
+      status.classList.remove('hidden');
+      status.textContent = msg;
+      status.style.color =
+        tone === 'ok' ? 'var(--color-verified)' :
+        tone === 'warn' ? 'var(--color-warn)' :
+        'var(--color-muted)';
+    };
+
+    const open = (tierKey) => {
+      const tier = tierByKey[tierKey];
+      if (!tier) return;
+      currentTier = tier;
+      kicker.textContent = `${tier.label} · ${tier.price}`;
+      title.textContent = baseTitle ? `${baseTitle}` : 'Continue';
+      cta.textContent =
+        tier.key === 'preview' ? 'Open preview' :
+        tier.key === 'hosting' ? 'Continue to checkout →' :
+        'Continue to checkout →';
+      form.reset();
+      setStatus('');
+      lastFocus = document.activeElement;
+      modal.classList.remove('hidden');
+      // Use plain show() instead of showModal() so the overlay click works
+      // and our backdrop styling applies.
+      modal.setAttribute('open', '');
+      document.documentElement.style.overflow = 'hidden';
+      setTimeout(() => document.getElementById('tier-modal-email')?.focus(), 30);
+    };
+
+    const close = () => {
+      modal.classList.add('hidden');
+      modal.removeAttribute('open');
+      document.documentElement.style.overflow = '';
+      if (lastFocus && 'focus' in lastFocus) lastFocus.focus();
+      currentTier = null;
+    };
+
+    // CTA buttons inside the page — any element with [data-tier] tied to a tier key.
+    document.addEventListener('click', (event) => {
+      const el = event.target instanceof Element ? event.target.closest('[data-tier]') : null;
+      if (!el) return;
+      const tierKey = el.getAttribute('data-tier');
+      if (!tierKey) return;
+
+      // Preview goes straight to the live URL if we have one.
+      if (tierKey === 'preview') {
+        const previewUrl = window.__BASE_PREVIEW__;
+        if (previewUrl) {
+          window.open(previewUrl, '_blank', 'noopener');
+          return;
+        }
+      }
+
+      event.preventDefault();
+      open(tierKey);
+    });
+
+    document.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      if (target.matches('[data-tier-modal-close]') || target === modal) close();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !modal.classList.contains('hidden')) close();
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!currentTier) return;
+
+      const data = new FormData(form);
+      const email = String(data.get('email') || '').trim();
+      const note  = String(data.get('note')  || '').trim();
+      if (!email) { setStatus('Email required.', 'warn'); return; }
+
+      submitBtn.setAttribute('disabled', '');
+      setStatus('Preparing checkout…', '');
+
+      try {
+        const res = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            slug: baseSlug,
+            tier: currentTier.key,
+            email,
+            note,
+          }),
+        });
+
+        if (res.ok) {
+          const body = await res.json();
+          if (body.checkout_url) {
+            window.location.assign(body.checkout_url);
+            return;
+          }
+          setStatus('Captured. We\'ll email you within 24 hours.', 'ok');
+        } else if (res.status === 503) {
+          // BE accepted intent but Dodo product isn't wired yet.
+          const body = await res.json().catch(() => ({}));
+          setStatus(body.message || 'Captured. We\'ll email you within 24 hours.', 'ok');
+          form.reset();
+        } else {
+          const body = await res.json().catch(() => ({}));
+          setStatus('Could not start checkout: ' + (body.error || res.statusText), 'warn');
+        }
+      } catch (err) {
+        setStatus('Network error. Try again, or email sarthakagrawal927@gmail.com.', 'warn');
+      } finally {
+        submitBtn.removeAttribute('disabled');
+      }
+    });
+  })();
+</script>

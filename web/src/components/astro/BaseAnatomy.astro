@@ -1,0 +1,258 @@
+---
+/**
+ * "Anatomy of a Base" — the centerpiece illustration on the homepage.
+ *
+ * Hand-built SVG, fully responsive, gently animated. No external assets.
+ * The point: in one image, show that a Base = preview + source + license
+ * + remix + launch, with the honesty layer (alternatives / what AI gets
+ * wrong) sitting underneath.
+ */
+---
+
+<figure class="anatomy">
+  <svg
+    viewBox="0 0 720 460"
+    role="img"
+    aria-labelledby="anatomy-title anatomy-desc"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <title id="anatomy-title">Anatomy of a verified Base</title>
+    <desc id="anatomy-desc">
+      A diagram showing what's inside each Base — live preview, source code,
+      license, remix-ready packaging, launch help — plus the honest underbelly:
+      alternatives, limitations, and what AI usually gets wrong.
+    </desc>
+
+    <defs>
+      <!-- Subtle inner shadow for panels -->
+      <filter id="soft" x="-5%" y="-5%" width="110%" height="110%">
+        <feGaussianBlur in="SourceAlpha" stdDeviation="1.6" />
+        <feOffset dy="1.2" />
+        <feComponentTransfer><feFuncA type="linear" slope="0.45" /></feComponentTransfer>
+        <feMerge><feMergeNode /><feMergeNode in="SourceGraphic" /></feMerge>
+      </filter>
+      <!-- Repeating dotted grid for the floor -->
+      <pattern id="dots" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+        <circle cx="1" cy="1" r="1" fill="#2a2c33" />
+      </pattern>
+      <linearGradient id="amber" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%"  stop-color="#f0b54a" />
+        <stop offset="100%" stop-color="#d99a2f" />
+      </linearGradient>
+      <linearGradient id="amberSoft" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"  stop-color="#f0b54a" stop-opacity="0.18" />
+        <stop offset="100%" stop-color="#f0b54a" stop-opacity="0" />
+      </linearGradient>
+      <linearGradient id="panelGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%"  stop-color="#16181c" />
+        <stop offset="100%" stop-color="#0f1012" />
+      </linearGradient>
+    </defs>
+
+    <!-- Background grid floor -->
+    <rect x="0" y="0" width="720" height="460" fill="transparent" />
+    <rect x="0" y="320" width="720" height="140" fill="url(#dots)" opacity="0.55" />
+
+    <!-- ─────────────────── Central Base panel ──────────────────── -->
+    <g transform="translate(180,32)" filter="url(#soft)" class="anatomy-base">
+      <rect x="0" y="0" width="360" height="232" rx="14"
+            fill="url(#panelGrad)" stroke="#2c2f35" stroke-width="1" />
+
+      <!-- Chrome strip with traffic lights -->
+      <rect x="0" y="0" width="360" height="32" rx="14" fill="#141518" />
+      <rect x="0" y="22" width="360" height="10" fill="#141518" />
+      <circle cx="16" cy="16" r="4.5" fill="#e15f5f" />
+      <circle cx="32" cy="16" r="4.5" fill="#e58a48" />
+      <circle cx="48" cy="16" r="4.5" fill="#5eead4" />
+      <text x="180" y="20" text-anchor="middle"
+            font-family="ui-monospace,'SF Mono',monospace" font-size="10"
+            letter-spacing="2.4" fill="#787d88">
+        verified/bases/your-base
+      </text>
+
+      <!-- Verified stamp (top-right) -->
+      <g transform="translate(282,52) rotate(-4)" class="anatomy-stamp">
+        <rect x="0" y="0" width="64" height="20" rx="3"
+              fill="none" stroke="#f0b54a" stroke-width="1.4" />
+        <text x="32" y="14" text-anchor="middle"
+              font-family="ui-monospace,'SF Mono',monospace" font-size="9"
+              letter-spacing="2" fill="#f0b54a">✓ VERIFIED</text>
+      </g>
+
+      <!-- Title block -->
+      <text x="20" y="68" font-family="Geist Variable,system-ui" font-weight="600"
+            font-size="22" fill="#ececee" letter-spacing="-0.5">Your Base</text>
+      <text x="20" y="86" font-family="Geist Variable,system-ui" font-size="11"
+            fill="#9398a2">A working starting point you can own.</text>
+
+      <!-- Inner detail rows -->
+      <g transform="translate(20,108)">
+        <g class="row">
+          <rect x="0" y="0" width="320" height="28" rx="6" fill="#141518" stroke="#1f2126" />
+          <circle cx="14" cy="14" r="3" fill="#5eead4" />
+          <text x="26" y="18" font-family="ui-monospace,'SF Mono',monospace"
+                font-size="10" fill="#9398a2">PREVIEW</text>
+          <text x="86" y="18" font-family="ui-monospace,'SF Mono',monospace"
+                font-size="10" fill="#ececee">live URL · screen recording</text>
+        </g>
+        <g transform="translate(0,34)" class="row">
+          <rect x="0" y="0" width="320" height="28" rx="6" fill="#141518" stroke="#1f2126" />
+          <circle cx="14" cy="14" r="3" fill="#5eead4" />
+          <text x="26" y="18" font-family="ui-monospace,'SF Mono',monospace"
+                font-size="10" fill="#9398a2">SOURCE</text>
+          <text x="86" y="18" font-family="ui-monospace,'SF Mono',monospace"
+                font-size="10" fill="#ececee">GitHub · setup guide</text>
+        </g>
+        <g transform="translate(0,68)" class="row">
+          <rect x="0" y="0" width="320" height="28" rx="6" fill="#141518" stroke="#1f2126" />
+          <circle cx="14" cy="14" r="3" fill="#f0b54a" />
+          <text x="26" y="18" font-family="ui-monospace,'SF Mono',monospace"
+                font-size="10" fill="#9398a2">REMIX</text>
+          <text x="86" y="18" font-family="ui-monospace,'SF Mono',monospace"
+                font-size="10" fill="#ececee">scoped customisation</text>
+        </g>
+        <g transform="translate(0,102)" class="row">
+          <rect x="0" y="0" width="320" height="28" rx="6" fill="#141518" stroke="#1f2126" />
+          <circle cx="14" cy="14" r="3" fill="#f0b54a" />
+          <text x="26" y="18" font-family="ui-monospace,'SF Mono',monospace"
+                font-size="10" fill="#9398a2">LAUNCH</text>
+          <text x="86" y="18" font-family="ui-monospace,'SF Mono',monospace"
+                font-size="10" fill="#ececee">deploy into your account</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- ─────── Side annotations: honesty + alternatives ──────── -->
+    <g class="anatomy-side">
+      <!-- LEFT: alternatives -->
+      <g transform="translate(28,80)">
+        <text font-family="ui-monospace,'SF Mono',monospace" font-size="10"
+              letter-spacing="2" fill="#f0b54a">ALTERNATIVES</text>
+        <g transform="translate(0,12)" font-family="Geist Variable,system-ui" font-size="11" fill="#9398a2">
+          <text y="14">— free option</text>
+          <text y="32">— paid SaaS</text>
+          <text y="50">— prompt it yourself</text>
+          <text y="68" fill="#f0b54a">— this Base is best if…</text>
+        </g>
+      </g>
+      <path d="M138 116 L180 132" stroke="#2c2f35" stroke-width="1" fill="none" stroke-dasharray="3 3" />
+
+      <!-- RIGHT: what AI gets wrong -->
+      <g transform="translate(560,80)">
+        <text font-family="ui-monospace,'SF Mono',monospace" font-size="10"
+              letter-spacing="2" fill="#e58a48">WHAT AI GETS WRONG</text>
+        <g transform="translate(0,12)" font-family="Geist Variable,system-ui" font-size="11" fill="#9398a2">
+          <text y="14">timezone handling</text>
+          <text y="32">webhook idempotency</text>
+          <text y="50">signed-URL TTLs</text>
+          <text y="68">deployment env vars</text>
+        </g>
+      </g>
+      <path d="M560 116 L540 132" stroke="#2c2f35" stroke-width="1" fill="none" stroke-dasharray="3 3" />
+    </g>
+
+    <!-- Foot strip with tier price tags -->
+    <g transform="translate(180,288)" class="anatomy-tags">
+      <g>
+        <rect x="0" y="0" width="62" height="28" rx="6" fill="#141518" stroke="#2c2f35" />
+        <text x="31" y="13" text-anchor="middle" font-family="ui-monospace,'SF Mono',monospace"
+              font-size="8" letter-spacing="1.4" fill="#787d88">PREVIEW</text>
+        <text x="31" y="24" text-anchor="middle" font-family="Geist Variable,system-ui"
+              font-size="10" fill="#ececee">free</text>
+      </g>
+      <g transform="translate(76,0)">
+        <rect x="0" y="0" width="62" height="28" rx="6" fill="#141518" stroke="#2c2f35" />
+        <text x="31" y="13" text-anchor="middle" font-family="ui-monospace,'SF Mono',monospace"
+              font-size="8" letter-spacing="1.4" fill="#787d88">USE</text>
+        <text x="31" y="24" text-anchor="middle" font-family="Geist Variable,system-ui"
+              font-size="10" fill="#ececee">$19</text>
+      </g>
+      <g transform="translate(152,0)">
+        <rect x="0" y="0" width="62" height="28" rx="6" fill="url(#amber)" />
+        <text x="31" y="13" text-anchor="middle" font-family="ui-monospace,'SF Mono',monospace"
+              font-size="8" letter-spacing="1.4" fill="#0a0a0b">OWN</text>
+        <text x="31" y="24" text-anchor="middle" font-family="Geist Variable,system-ui"
+              font-size="10" fill="#0a0a0b" font-weight="600">$79</text>
+      </g>
+      <g transform="translate(228,0)">
+        <rect x="0" y="0" width="62" height="28" rx="6" fill="#141518" stroke="#2c2f35" />
+        <text x="31" y="13" text-anchor="middle" font-family="ui-monospace,'SF Mono',monospace"
+              font-size="8" letter-spacing="1.4" fill="#787d88">REMIX</text>
+        <text x="31" y="24" text-anchor="middle" font-family="Geist Variable,system-ui"
+              font-size="10" fill="#ececee">$49</text>
+      </g>
+      <g transform="translate(304,0)">
+        <rect x="0" y="0" width="62" height="28" rx="6" fill="#141518" stroke="#2c2f35" />
+        <text x="31" y="13" text-anchor="middle" font-family="ui-monospace,'SF Mono',monospace"
+              font-size="8" letter-spacing="1.4" fill="#787d88">LAUNCH</text>
+        <text x="31" y="24" text-anchor="middle" font-family="Geist Variable,system-ui"
+              font-size="10" fill="#ececee">$149</text>
+      </g>
+    </g>
+
+    <!-- Faint guide labels for the tiers row -->
+    <text x="360" y="350" text-anchor="middle"
+          font-family="ui-monospace,'SF Mono',monospace" font-size="10"
+          letter-spacing="2" fill="#6f7480">PAY FOR THE OUTCOME YOU WANT</text>
+  </svg>
+</figure>
+
+<style>
+  .anatomy {
+    margin: 0;
+    width: 100%;
+    max-width: 720px;
+  }
+  .anatomy svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* Centre panel breathes very subtly. */
+  .anatomy-base {
+    transform-origin: 360px 148px;
+    animation: anatomy-breathe 6s ease-in-out infinite;
+  }
+  @keyframes anatomy-breathe {
+    0%, 100% { transform: translate(180px, 32px) scale(1); }
+    50%      { transform: translate(180px, 30px) scale(1.005); }
+  }
+
+  /* Stamp pulses very gently. */
+  .anatomy-stamp {
+    transform-origin: 32px 10px;
+    animation: pulse-soft 3.4s ease-in-out infinite;
+  }
+
+  /* Side annotations fade in on enter (paired with [data-reveal]). */
+  [data-reveal] .anatomy-side text { opacity: 0; }
+  [data-reveal].is-revealed .anatomy-side text {
+    animation: rise 0.9s var(--ease-out-expo) both;
+    animation-delay: 0.25s;
+  }
+
+  /* Tier tags lift slightly in sequence. */
+  .anatomy-tags > g {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  [data-reveal].is-revealed .anatomy-tags > g {
+    animation: rise 0.6s var(--ease-out-expo) forwards;
+  }
+  [data-reveal].is-revealed .anatomy-tags > g:nth-child(1) { animation-delay: 0.15s; }
+  [data-reveal].is-revealed .anatomy-tags > g:nth-child(2) { animation-delay: 0.25s; }
+  [data-reveal].is-revealed .anatomy-tags > g:nth-child(3) { animation-delay: 0.35s; }
+  [data-reveal].is-revealed .anatomy-tags > g:nth-child(4) { animation-delay: 0.45s; }
+  [data-reveal].is-revealed .anatomy-tags > g:nth-child(5) { animation-delay: 0.55s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .anatomy-base,
+    .anatomy-stamp,
+    .anatomy-tags > g {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+</style>

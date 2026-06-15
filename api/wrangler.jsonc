@@ -1,0 +1,70 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "verified-bases-api",
+  "main": "./build/worker.mjs",
+  "compatibility_date": "2026-05-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // TinyGo emits build/app.wasm before this step.
+  "build": {
+    "command": "make build"
+  },
+  "rules": [
+    { "type": "CompiledWasm", "globs": ["**/*.wasm"], "fallthrough": false }
+  ],
+
+  // Plain (non-secret) vars — visible in wrangler logs and the dashboard.
+  "vars": {
+    "PHASE": "1-manual-curated-store",
+    "DODO_ENV": "test",
+    "PUBLIC_SITE_ORIGIN": "https://bases.sarthakagrawal.dev",
+    "RESEND_FROM": "Verified Bases <hello@bases.sarthakagrawal.dev>",
+    "ADMIN_INBOX_EMAIL": "sarthakagrawal927@gmail.com"
+  },
+
+  // ── D1 (managed SQLite at the edge) ─────────────────────────────
+  // After creating: wrangler d1 create verified-bases-db
+  // then replace database_id below with the printed value, then run:
+  //   wrangler d1 execute verified-bases-db --remote --file=migrations/0001_init.sql
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "verified-bases-db",
+      "database_id": "cbf8a244-5a00-46af-ac5a-d1235b3dc313",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  // ── KV (rate-limit counters) ────────────────────────────────────
+  "kv_namespaces": [
+    {
+      "binding": "RATELIMIT",
+      "id": "27e4b89dc2304c5f80f3de898e2f45bc"
+    }
+  ],
+
+  // ── R2 (deliverable assets — Use It & Own It tarballs / DMGs) ───
+  // wrangler r2 bucket create verified-bases-delivery
+  "r2_buckets": [
+    {
+      "binding": "DELIVERY",
+      "bucket_name": "verified-bases-delivery"
+    }
+  ],
+
+  "observability": { "enabled": true },
+  "placement":     { "mode": "smart" }
+
+  // ── Secrets (set via `wrangler secret put NAME`):
+  //   DODO_API_KEY           — Dodo Payments API key (live or test per DODO_ENV)
+  //   DODO_WEBHOOK_SECRET    — Standard Webhooks signing secret from Dodo dashboard
+  //   RESEND_API_KEY         — Resend API key for transactional email
+  //   TURNSTILE_SECRET       — Cloudflare Turnstile secret (paired with PUBLIC_TURNSTILE_SITE_KEY on the web side)
+  //   DELIVERY_SECRET        — HMAC key for signing /api/download URLs (any high-entropy string)
+  //
+  // ── Per-Base product IDs (set via `wrangler secret put`):
+  //   DODO_PRODUCT_<slug>_<tier>   e.g. DODO_PRODUCT_csv_cleaner_mac_own=prod_abc123
+  //
+  // ── Per-Base R2 delivery keys (set via `wrangler secret put`):
+  //   DODO_DELIVERY_<slug>_<tier>  e.g. DODO_DELIVERY_csv_cleaner_mac_use=csv-cleaner-mac/use/v1.dmg
+}

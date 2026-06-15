@@ -1,0 +1,56 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+const lastUpdated = '2026-06-15';
+---
+
+<BaseLayout
+  title="Refund policy"
+  description="When and how Verified Software Bases issues refunds. Short, honest, and biased toward refunding when there's any doubt."
+>
+  <section class="container-page pt-14 pb-8 md:pt-20">
+    <p class="kicker">Refund policy</p>
+    <h1 class="mt-3 text-4xl font-semibold tracking-tight text-fg sm:text-5xl text-balance">
+      Biased toward refunding.
+    </h1>
+    <p class="mt-3 font-mono text-xs text-faint">Last updated {lastUpdated}</p>
+  </section>
+
+  <section class="container-page pb-24 max-w-3xl">
+    <div class="space-y-8 text-[16px] text-muted leading-relaxed text-pretty">
+      <div>
+        <h2 class="text-xl font-semibold text-fg">The plain rule</h2>
+        <p class="mt-3">
+          If you bought a Base and you're not happy in the first <span class="text-fg">14 days</span>,
+          email <a class="link text-accent" href="mailto:sarthakagrawal927@gmail.com">sarthakagrawal927@gmail.com</a>
+          and we refund. No interrogation. We'd rather refund a few unhappy
+          buyers than build a reputation for stonewalling.
+        </p>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold text-fg">The fine print</h2>
+        <ul class="mt-3 list-disc pl-5 space-y-2 marker:text-accent">
+          <li><span class="text-fg">Use It</span> and <span class="text-fg">Own It</span>: full refund within 14 days, even after you downloaded.</li>
+          <li><span class="text-fg">Remix It</span>: refund is full if the remix hasn't started; partial (work performed) if it has.</li>
+          <li><span class="text-fg">Launch It</span>: refund pro-rata against the hours we've already spent. We share a rough log on request.</li>
+          <li><span class="text-fg">Managed Hosting</span>: cancel any time; we don't refund the current month, but we don't auto-renew you either.</li>
+          <li><span class="text-fg">Chargebacks</span>: please email us first. We'd rather refund directly than fight a chargeback.</li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-semibold text-fg">What we won't refund</h2>
+        <p class="mt-3">
+          Past 14 days, when the limitation you're hitting is one we listed
+          honestly on the Base page, or when you've used the source to ship a
+          product that's now in production. In those cases we'll work with you
+          on a Fix Pack or Remix run instead.
+        </p>
+      </div>
+
+      <p class="text-fg pt-4 border-t border-line">
+        How to request: email <a class="link text-accent" href="mailto:sarthakagrawal927@gmail.com">sarthakagrawal927@gmail.com</a> with your order email and the Base slug. We reply within 3 business days and refund within 5.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
