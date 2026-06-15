@@ -3,6 +3,7 @@
   "name": "verified-bases-web",
   "pages_build_output_dir": "./dist",
   "compatibility_date": "2026-05-01",
+  "compatibility_flags": ["nodejs_compat"],
 
   // Wire `/api/*` (handled by web/functions/api/[[path]].ts) to the
   // backend Worker. Service-bind by name — the Worker must exist in the
