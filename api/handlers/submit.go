@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"sync"
 )
 
 // Submission is the payload from the /collab creator form.
@@ -56,26 +57,38 @@ func Submit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Notify admin — failure here does not fail the response.
-	_, _ = sendEmail(resendEmail{
-		To:      []string{adminInbox()},
-		Subject: fmt.Sprintf("[bases] new submission: %s", s.Title),
-		Text: fmt.Sprintf(
-			"New Base submission (id %s)\n\nTitle: %s\nOne-liner: %s\nCategory: %s\nSuggested price: $%d\n\nCreator: %s <%s>%s\nRepo/Demo: %s\nStack: %s\n\n--- does not do ---\n%s\n\n--- known limitations ---\n%s\n\n--- ai gets wrong ---\n%s\n",
-			id, s.Title, s.OneLiner, s.Category, s.Price, s.Name, s.Email, handle(s.Handle), s.RepoOrDemo, s.Stack, s.DoesNotDo, s.Limitations, s.AIGetsWrong,
-		),
-		ReplyTo: s.Email,
-	})
-
-	// Confirm to creator.
-	_, _ = sendEmail(resendEmail{
-		To:      []string{s.Email},
-		Subject: "We got your Base submission",
-		Text: fmt.Sprintf(
-			"Hi %s,\n\nThanks for submitting %q to Verified Software Bases. We review within 7 days and reply on this thread either way.\n\nIf accepted, the next step is polishing the listing copy with you and recording a preview.\n\n— Sarthak",
-			pickFirst(s.Name, "there"), s.Title,
-		),
-	})
+	// Admin notification + creator confirmation are independent network
+	// round-trips with no shared state and discarded results. Fire them
+	// concurrently and join before responding, preserving "both attempted
+	// before the response" and the fire-and-forget semantics.
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func() {
+		defer wg.Done()
+		// Notify admin — failure here does not fail the response.
+		_, _ = sendEmail(resendEmail{
+			To:      []string{adminInbox()},
+			Subject: fmt.Sprintf("[bases] new submission: %s", s.Title),
+			Text: fmt.Sprintf(
+				"New Base submission (id %s)\n\nTitle: %s\nOne-liner: %s\nCategory: %s\nSuggested price: $%d\n\nCreator: %s <%s>%s\nRepo/Demo: %s\nStack: %s\n\n--- does not do ---\n%s\n\n--- known limitations ---\n%s\n\n--- ai gets wrong ---\n%s\n",
+				id, s.Title, s.OneLiner, s.Category, s.Price, s.Name, s.Email, handle(s.Handle), s.RepoOrDemo, s.Stack, s.DoesNotDo, s.Limitations, s.AIGetsWrong,
+			),
+			ReplyTo: s.Email,
+		})
+	}()
+	go func() {
+		defer wg.Done()
+		// Confirm to creator.
+		_, _ = sendEmail(resendEmail{
+			To:      []string{s.Email},
+			Subject: "We got your Base submission",
+			Text: fmt.Sprintf(
+				"Hi %s,\n\nThanks for submitting %q to Verified Software Bases. We review within 7 days and reply on this thread either way.\n\nIf accepted, the next step is polishing the listing copy with you and recording a preview.\n\n— Sarthak",
+				pickFirst(s.Name, "there"), s.Title,
+			),
+		})
+	}()
+	wg.Wait()
 
 	writeJSON(w, http.StatusAccepted,
 		fmt.Sprintf(`{"ok":true,"id":"%s","status":"received","review_window_days":7}`, id),

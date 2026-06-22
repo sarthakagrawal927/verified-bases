@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"sync"
 )
 
 // DodoEnvelope is the Standard-Webhooks-style outer event we receive.
@@ -115,22 +116,35 @@ func handlePaymentSucceeded(ctx context.Context, st *store, e DodoEnvelope) {
 		)
 	}
 
+	// The buyer + admin emails are independent network round-trips with no
+	// shared state and discarded results. Fire them concurrently and join
+	// before returning, preserving "both complete before the handler exits".
+	var wg sync.WaitGroup
 	if data.Email != "" {
-		_, _ = sendEmail(resendEmail{
-			To:      []string{data.Email},
-			Subject: "Thanks — your Base is on the way",
-			Text:    buyerBody,
-		})
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			_, _ = sendEmail(resendEmail{
+				To:      []string{data.Email},
+				Subject: "Thanks — your Base is on the way",
+				Text:    buyerBody,
+			})
+		}()
 	}
-	_, _ = sendEmail(resendEmail{
-		To:      []string{adminInbox()},
-		Subject: fmt.Sprintf("[bases] PAID: %s · %s", slug, tier),
-		Text: fmt.Sprintf(
-			"Payment succeeded.\n\nBase: %s\nTier: %s\nAmount: %.2f %s\nBuyer: %s\nDodo payment_id: %s\nDodo session_id: %s\nDelivery: %s\n",
-			slug, tier, float64(data.Amount)/100, data.Currency, data.Email, data.PaymentID, data.SessionID,
-			deliveryStatus(slug, tier),
-		),
-	})
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		_, _ = sendEmail(resendEmail{
+			To:      []string{adminInbox()},
+			Subject: fmt.Sprintf("[bases] PAID: %s · %s", slug, tier),
+			Text: fmt.Sprintf(
+				"Payment succeeded.\n\nBase: %s\nTier: %s\nAmount: %.2f %s\nBuyer: %s\nDodo payment_id: %s\nDodo session_id: %s\nDelivery: %s\n",
+				slug, tier, float64(data.Amount)/100, data.Currency, data.Email, data.PaymentID, data.SessionID,
+				deliveryStatus(slug, tier),
+			),
+		})
+	}()
+	wg.Wait()
 }
 
 // autoDeliveryURL returns a signed /api/download URL for the buyer if both
