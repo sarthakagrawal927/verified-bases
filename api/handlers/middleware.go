@@ -12,10 +12,10 @@ import (
 
 // allowedOrigins is the list of frontends permitted to call the API.
 var allowedOrigins = map[string]bool{
-	"https://bases.sarthakagrawal.dev":  true,
-	"https://verified-bases.pages.dev":  true,
-	"http://localhost:4321":             true,
-	"http://127.0.0.1:4321":             true,
+	"https://bases.sarthakagrawal.dev": true,
+	"https://verified-bases.pages.dev": true,
+	"http://localhost:4321":            true,
+	"http://127.0.0.1:4321":            true,
 }
 
 // WithCORS sets allowlisted CORS headers on every response.
@@ -41,15 +41,16 @@ func CORSPreflight(w http.ResponseWriter, _ *http.Request) {
 // WithRateLimit enforces a sliding-ish per-IP-per-endpoint cap, backed by KV.
 //
 // Limits are intentionally conservative for a curated marketplace:
-//   submit, intent, checkout — 20/min per IP
-//   webhook                   — unlimited (Dodo retries; rejection breaks fulfillment)
+//
+//	submit, intent, checkout — 20/min per IP
+//	webhook                   — unlimited (Dodo retries; rejection breaks fulfillment)
 //
 // KV is eventually consistent, so this is a defence-in-depth layer, not an
 // atomic gate. For higher-volume Phase 2 traffic, swap for Cloudflare's
 // Rate Limiting binding (available 2025+) or a Durable Object.
 func WithRateLimit(next http.Handler) http.Handler {
-	const window = 60   // seconds
-	const max    = 20
+	const window = 60 // seconds
+	const max = 20
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Never rate-limit health checks or the webhook receiver.

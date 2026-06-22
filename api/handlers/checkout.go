@@ -16,10 +16,10 @@ type CheckoutReq struct {
 // Checkout creates a Dodo hosted checkout session for the given (slug, tier).
 //
 // Three branches:
-//   1. Unknown slug+tier         → 422 invalid_combo
-//   2. Tier not wired to a Dodo product (no DODO_PRODUCT_… env) → 503 plus
-//      we persist the intent so demand still surfaces.
-//   3. Happy path → write a pending order row + return the Dodo checkout_url.
+//  1. Unknown slug+tier         → 422 invalid_combo
+//  2. Tier not wired to a Dodo product (no DODO_PRODUCT_… env) → 503 plus
+//     we persist the intent so demand still surfaces.
+//  3. Happy path → write a pending order row + return the Dodo checkout_url.
 func Checkout(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 

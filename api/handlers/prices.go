@@ -56,10 +56,10 @@ var priceTable = map[string]price{
 // ID. Product IDs come from env vars rather than hardcoded so we can keep
 // separate test/live IDs without code changes:
 //
-//   DODO_PRODUCT_tinygpt_specialist_starter_own = prod_abc123
-//   DODO_PRODUCT_tinygpt_specialist_starter_use = prod_def456
-//   DODO_PRODUCT_tinygpt_specialist_starter_remix = prod_ghi789
-//   DODO_PRODUCT_tinygpt_specialist_starter_launch = prod_jkl012
+//	DODO_PRODUCT_tinygpt_specialist_starter_own = prod_abc123
+//	DODO_PRODUCT_tinygpt_specialist_starter_use = prod_def456
+//	DODO_PRODUCT_tinygpt_specialist_starter_remix = prod_ghi789
+//	DODO_PRODUCT_tinygpt_specialist_starter_launch = prod_jkl012
 //
 // Underscores replace `-` and `:` in the slug:tier key.
 func lookupPrice(slug, tier string) (price, bool) {
