@@ -10,6 +10,9 @@ import (
 // Resend — tiny REST client. We send transactional confirmations to the
 // buyer and admin notifications to the operator inbox.
 
+// Shared HTTP client — reuse across requests instead of allocating per call.
+var httpClient = &http.Client{Timeout: 7 * time.Second}
+
 type resendEmail struct {
 	From    string   `json:"from"`
 	To      []string `json:"to"`
@@ -42,8 +45,7 @@ func sendEmail(e resendEmail) (int, error) {
 	req.Header.Set("Authorization", "Bearer "+apiKey)
 	req.Header.Set("Content-Type", "application/json")
 
-	client := &http.Client{Timeout: 7 * time.Second}
-	resp, err := client.Do(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return 0, err
 	}

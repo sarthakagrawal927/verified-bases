@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"sync"
 )
 
 // DodoEnvelope is the Standard-Webhooks-style outer event we receive.
@@ -117,13 +116,10 @@ func handlePaymentSucceeded(ctx context.Context, st *store, e DodoEnvelope) {
 	}
 
 	// The buyer + admin emails are independent network round-trips with no
-	// shared state and discarded results. Fire them concurrently and join
-	// before returning, preserving "both complete before the handler exits".
-	var wg sync.WaitGroup
+	// shared state and discarded results. Fire-and-forget so the webhook
+	// response is not delayed by email delivery.
 	if data.Email != "" {
-		wg.Add(1)
 		go func() {
-			defer wg.Done()
 			_, _ = sendEmail(resendEmail{
 				To:      []string{data.Email},
 				Subject: "Thanks — your Base is on the way",
@@ -131,9 +127,7 @@ func handlePaymentSucceeded(ctx context.Context, st *store, e DodoEnvelope) {
 			})
 		}()
 	}
-	wg.Add(1)
 	go func() {
-		defer wg.Done()
 		_, _ = sendEmail(resendEmail{
 			To:      []string{adminInbox()},
 			Subject: fmt.Sprintf("[bases] PAID: %s · %s", slug, tier),
@@ -144,7 +138,6 @@ func handlePaymentSucceeded(ctx context.Context, st *store, e DodoEnvelope) {
 			),
 		})
 	}()
-	wg.Wait()
 }
 
 // autoDeliveryURL returns a signed /api/download URL for the buyer if both

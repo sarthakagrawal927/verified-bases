@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/url"
-	"time"
 )
 
 // Cloudflare Turnstile — verifies a token issued by the client widget.
@@ -52,8 +51,7 @@ func verifyTurnstile(token, ip string) (ok bool, errorCode string) {
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-	client := &http.Client{Timeout: 5 * time.Second}
-	resp, err := client.Do(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		return false, "siteverify_unreachable"
 	}
