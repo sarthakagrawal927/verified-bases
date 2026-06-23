@@ -20,6 +20,9 @@ import (
 // pulls in reflect-heavy code paths). Standard Webhooks signature
 // verification is implemented locally.
 
+// Shared HTTP client for Dodo API calls (10s timeout for checkout flows).
+var dodoHTTPClient = &http.Client{Timeout: 10 * time.Second}
+
 // dodoBaseURL returns the API root for the current environment.
 func dodoBaseURL() string {
 	if env("DODO_ENV") == "live" {
@@ -69,8 +72,7 @@ func createDodoCheckout(req CheckoutSessionReq) (*CheckoutSessionRes, int, error
 	httpReq.Header.Set("Authorization", "Bearer "+apiKey)
 	httpReq.Header.Set("Content-Type", "application/json")
 
-	client := &http.Client{Timeout: 10 * time.Second}
-	resp, err := client.Do(httpReq)
+	resp, err := dodoHTTPClient.Do(httpReq)
 	if err != nil {
 		return nil, http.StatusBadGateway, err
 	}

@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"sync"
 )
 
 // Submission is the payload from the /collab creator form.
@@ -58,14 +57,9 @@ func Submit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Admin notification + creator confirmation are independent network
-	// round-trips with no shared state and discarded results. Fire them
-	// concurrently and join before responding, preserving "both attempted
-	// before the response" and the fire-and-forget semantics.
-	var wg sync.WaitGroup
-	wg.Add(2)
+	// round-trips with no shared state and discarded results. Fire-and-forget
+	// so the response is not delayed by email delivery.
 	go func() {
-		defer wg.Done()
-		// Notify admin — failure here does not fail the response.
 		_, _ = sendEmail(resendEmail{
 			To:      []string{adminInbox()},
 			Subject: fmt.Sprintf("[bases] new submission: %s", s.Title),
@@ -77,8 +71,6 @@ func Submit(w http.ResponseWriter, r *http.Request) {
 		})
 	}()
 	go func() {
-		defer wg.Done()
-		// Confirm to creator.
 		_, _ = sendEmail(resendEmail{
 			To:      []string{s.Email},
 			Subject: "We got your Base submission",
@@ -88,7 +80,6 @@ func Submit(w http.ResponseWriter, r *http.Request) {
 			),
 		})
 	}()
-	wg.Wait()
 
 	writeJSON(w, http.StatusAccepted,
 		fmt.Sprintf(`{"ok":true,"id":"%s","status":"received","review_window_days":7}`, id),
