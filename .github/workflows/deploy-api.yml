@@ -24,26 +24,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Go is the only build prerequisite. Do NOT set job-level GOOS/GOARCH:
-      # `make build` runs workers-assets-gen on the host first, then scopes
-      # GOOS=js GOARCH=wasm to the `go build` line itself.
+      # Go + Node are the build/deploy prerequisites. Do NOT set job-level
+      # GOOS/GOARCH: `make build` runs workers-assets-gen on the host first
+      # (native go), then scopes GOOS=js GOARCH=wasm to the `go build` line.
       - uses: actions/setup-go@v5
         with:
           go-version: '1.22'
           cache: true
           cache-dependency-path: api/go.sum
 
-      # make build => workers-assets-gen (emits build/worker.mjs runtime) +
-      # GOOS=js GOARCH=wasm go build (emits build/app.wasm). Matches the manual
-      # `make deploy` path. wrangler.jsonc's build.command re-runs this during
-      # deploy (idempotent), so failures still surface here as a named step.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # Early, named build check: make build => workers-assets-gen (emits
+      # build/worker.mjs runtime) + GOOS=js GOARCH=wasm go build (emits
+      # build/app.wasm). Surfaces build breakage before any Cloudflare call.
       - name: build
         run: make build
 
+      # Deploy via wrangler directly (matches `make deploy`). wrangler reads
+      # api/wrangler.jsonc and re-runs build.command (`make build`) here, which
+      # is why go + make must be on PATH in THIS step — workers-assets-gen wipes
+      # build/ first, so the deployed worker.mjs comes from this re-run, not the
+      # step above. `--yes` auto-confirms the npx install prompt (the prior
+      # wrangler-action run failed because that prompt could not be answered).
       - name: deploy
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: api
-          command: deploy
+        run: npx --yes wrangler@4 deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
