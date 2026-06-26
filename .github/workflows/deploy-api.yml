@@ -1,0 +1,49 @@
+name: Deploy API Worker
+
+# Deploys the verified-bases-api Cloudflare Worker (Go -> WASM via syumai/workers).
+# The web surface (verified-bases-web Pages project) is git-connected natively in
+# the Cloudflare dashboard and is intentionally NOT handled here.
+#
+# Dispatch-only for now; a push trigger (paths: api/**) can be added once a few
+# manual runs confirm the build + deploy path is green in CI.
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-api-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy-api:
+    name: deploy (Go on Workers)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: api
+    steps:
+      - uses: actions/checkout@v4
+
+      # Go is the only build prerequisite. Do NOT set job-level GOOS/GOARCH:
+      # `make build` runs workers-assets-gen on the host first, then scopes
+      # GOOS=js GOARCH=wasm to the `go build` line itself.
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          cache: true
+          cache-dependency-path: api/go.sum
+
+      # make build => workers-assets-gen (emits build/worker.mjs runtime) +
+      # GOOS=js GOARCH=wasm go build (emits build/app.wasm). Matches the manual
+      # `make deploy` path. wrangler.jsonc's build.command re-runs this during
+      # deploy (idempotent), so failures still surface here as a named step.
+      - name: build
+        run: make build
+
+      - name: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: api
+          command: deploy
