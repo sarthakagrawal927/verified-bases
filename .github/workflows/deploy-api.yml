@@ -9,7 +9,6 @@ name: Deploy API Worker
 
 on:
   workflow_dispatch:
-
 concurrency:
   group: deploy-api-${{ github.ref }}
   cancel-in-progress: false
